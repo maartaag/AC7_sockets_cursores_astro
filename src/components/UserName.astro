@@ -19,8 +19,7 @@ import Button from "./base/Button.astro";
 </form>
 <script>
   import { io } from "socket.io-client";
-  window.socket = io("http://localhost:3000");
-  const socket = io("http://localhost:3000");
+  //   window.socket = io("http://localhost:3000");
 
   //   waitForSocket();
   const formUser = document.getElementById("formUser");
@@ -34,17 +33,17 @@ import Button from "./base/Button.astro";
 
       window.NOM = nom;
       formUser.style.display = "none";
-      socket.emit("connected", nombre.value);
+      //socket.emit("connected", nombre.value);
       formUser.style.display = "none";
 
       window.dispatchEvent(new CustomEvent("userConnected", { detail: nom }));
     }
   });
-  //   function waitForSocket() {
-  //     if (window.socket) {
-  //       socket = window.socket;
-  //     } else {
-  //       setTimeout(waitForSocket, 100);
-  //     }
-  //   }
+  function waitForSocket() {
+    if (window.socket) {
+      socket = window.socket;
+    } else {
+      setTimeout(waitForSocket, 100);
+    }
+  }
 </script>
