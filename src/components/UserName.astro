@@ -1,0 +1,50 @@
+---
+import Button from "./base/Button.astro";
+---
+
+<form
+  id="formUser"
+  class="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+>
+  <div class="bg-white p-6 rounded-2xl shadow-lg flex flex-col gap-4 w-80">
+    <h2 class="text-xl font-bold text-center">Entrar a la pisarra</h2>
+    <input
+      id="nombre"
+      type="text"
+      placeholder="Tu nombre..."
+      class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+    <Button type="submit">Entrar</Button>
+  </div>
+</form>
+<script>
+  import { io } from "socket.io-client";
+  window.socket = io("http://localhost:3000");
+  const socket = io("http://localhost:3000");
+
+  //   waitForSocket();
+  const formUser = document.getElementById("formUser");
+  console.log(formUser);
+  const nombre = document.getElementById("nombre");
+
+  formUser.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (nombre.value) {
+      let nom = nombre.value;
+
+      window.NOM = nom;
+      formUser.style.display = "none";
+      socket.emit("connected", nombre.value);
+      formUser.style.display = "none";
+
+      window.dispatchEvent(new CustomEvent("userConnected", { detail: nom }));
+    }
+  });
+  //   function waitForSocket() {
+  //     if (window.socket) {
+  //       socket = window.socket;
+  //     } else {
+  //       setTimeout(waitForSocket, 100);
+  //     }
+  //   }
+</script>
