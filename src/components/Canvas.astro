@@ -1,0 +1,80 @@
+---
+import UserName from "./UserName.astro";
+---
+
+<div
+  id="cursor-layer"
+  class="fixed top-0 left-0 w-full h-full pointer-events-none"
+>
+</div>
+<UserName />
+
+<script>
+  import { io } from "socket.io-client";
+
+  const socket = io("http://localhost:3000");
+  const layer = document.getElementById("cursor-layer");
+
+  const cursors = {};
+
+  document.addEventListener("mousemove", (e) => {
+    const now = Date.now();
+    if (now - lastSend < 50) return; // 20fps
+
+    lastSend = now;
+
+    socket.emit("cursor:move", {
+      x: e.clientX,
+      y: e.clientY,
+    });
+  });
+
+  // THROTTLE (IMPORTANTE)
+  let lastSend = 0;
+
+  document.addEventListener("mousemove", (e) => {
+    const now = Date.now();
+    if (now - lastSend < 50) return;
+
+    lastSend = now;
+
+    socket.emit("cursor:move", {
+      x: e.clientX,
+      y: e.clientY,
+    });
+  });
+
+  // mover cursor
+  socket.on("cursor:move", ({ id, x, y }) => {
+    const cursor = cursors[id];
+    if (!cursor) return;
+
+    cursor.style.transform = `translate(${x}px, ${y}px)`;
+  });
+
+  function createCursor(id, nombre, color) {
+    if (cursors[id]) return;
+
+    const el = document.createElement("div");
+    el.className = "absolute transition-transform duration-75";
+
+    el.innerHTML = `
+      <div style="
+        width:10px;
+        height:10px;
+        background:${color};
+        border-radius:50%;
+      "></div>
+      <span style="
+        color:${color};
+        font-size:12px;
+        margin-left:4px;
+      ">
+        ${nombre}
+      </span>
+    `;
+
+    layer.appendChild(el);
+    cursors[id] = el;
+  }
+</script>
