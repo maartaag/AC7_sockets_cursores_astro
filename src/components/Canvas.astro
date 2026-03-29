@@ -58,7 +58,7 @@ import UserName from "./UserName.astro";
     });
   });
 
-  socket.on("user:remove", ({ id }) => {
+  socket.on("user:remove", (id) => {
     const cursor = cursors[id];
     if (cursor) {
       cursor.remove();
