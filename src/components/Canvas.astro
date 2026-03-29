@@ -72,21 +72,17 @@ import UserName from "./UserName.astro";
     const el = document.createElement("div");
     el.className = "absolute transition-transform duration-75";
 
-    el.innerHTML = `
-      <div style="
-        width:10px;
-        height:10px;
-        background:${color};
-        border-radius:50%;
-      "></div>
-      <span style="
-        color:${color};
-        font-size:12px;
-        margin-left:4px;
-      ">
-        ${nombre}
-      </span>
-    `;
+    const dot = document.createElement("div");
+    dot.className = "w-2.5 h-2.5 rounded-full";
+    dot.style.backgroundColor = color;
+
+    const label = document.createElement("span");
+    label.className = "text-xs";
+    label.textContent = nombre;
+    label.style.color = color;
+
+    el.appendChild(dot);
+    el.appendChild(label);
 
     layer.appendChild(el);
     cursors[id] = el;
