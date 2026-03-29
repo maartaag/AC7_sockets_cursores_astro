@@ -17,16 +17,9 @@ import UserName from "./UserName.astro";
 
   const cursors = {};
 
-  document.addEventListener("mousemove", (e) => {
-    const now = Date.now();
-    if (now - lastSend < 50) return; // 20fps
-
-    lastSend = now;
-
-    socket.emit("cursor:move", {
-      x: e.clientX,
-      y: e.clientY,
-    });
+  window.addEventListener("userConnected", (e) => {
+    const nombre = e.detail;
+    socket.emit("connected", nombre);
   });
 
   // THROTTLE (IMPORTANTE)
@@ -37,6 +30,7 @@ import UserName from "./UserName.astro";
     if (now - lastSend < 50) return;
 
     lastSend = now;
+    console.log("Enviando posición del cursor:", e.clientX, e.clientY);
 
     socket.emit("cursor:move", {
       x: e.clientX,
@@ -50,6 +44,26 @@ import UserName from "./UserName.astro";
     if (!cursor) return;
 
     cursor.style.transform = `translate(${x}px, ${y}px)`;
+  });
+
+  socket.on("user:connected", ({ id, nombre, color }) => {
+    createCursor(id, nombre, color);
+  });
+
+  socket.on("users:init", (users) => {
+    console.log("INIT", users);
+
+    Object.entries(users).forEach(([id, user]) => {
+      createCursor(id, user.nombre, user.color);
+    });
+  });
+
+  socket.on("user:remove", ({ id }) => {
+    const cursor = cursors[id];
+    if (cursor) {
+      cursor.remove();
+      delete cursors[id];
+    }
   });
 
   function createCursor(id, nombre, color) {
