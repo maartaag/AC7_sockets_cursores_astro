@@ -1,5 +1,6 @@
 ---
 import UserName from "./UserName.astro";
+import UserList from "./UserList.astro";
 ---
 
 <div
@@ -7,12 +8,16 @@ import UserName from "./UserName.astro";
   class="fixed top-0 left-0 w-full h-full pointer-events-none"
 >
 </div>
+<UserList />
 <UserName />
 
 <script>
   import { io } from "socket.io-client";
 
   const socket = io("http://localhost:3000");
+  window.socket = socket;
+  window.dispatchEvent(new Event("socket-ready"));
+
   const layer = document.getElementById("cursor-layer");
 
   const cursors = {};

@@ -1,0 +1,32 @@
+<aside class="w-64 bg-gray-900 text-white p-4 flex flex-col">
+  <h2 class="text-xl font-bold mb-4">Usuarios</h2>
+
+  <ul id="userList" class="mt-4 space-y-2"></ul>
+</aside>
+
+<script>
+  const users = document.getElementById("Users");
+  const list = document.getElementById("userList");
+
+  window.addEventListener("socket-ready", () => {
+    const socket = window.socket;
+
+    socket.on("users:list", (valor) => {
+      list.innerHTML = "";
+      valor.forEach((user) => {
+        const li = document.createElement("li");
+        li.textContent = user.nombre;
+        li.className = "bg-gray-800 p-2 rounded";
+        list.appendChild(li);
+      });
+    });
+  });
+
+  async function waitForSocket() {
+    if (window.socket) {
+      return (socket = window.socket);
+    } else {
+      setTimeout(waitForSocket, 100);
+    }
+  }
+</script>
