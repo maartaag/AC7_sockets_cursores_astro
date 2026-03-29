@@ -27,7 +27,6 @@ import UserList from "./UserList.astro";
     socket.emit("connected", nombre);
   });
 
-  // THROTTLE (IMPORTANTE)
   let lastSend = 0;
 
   document.addEventListener("mousemove", (e) => {
@@ -35,7 +34,7 @@ import UserList from "./UserList.astro";
     if (now - lastSend < 50) return;
 
     lastSend = now;
-    console.log("Enviando posición del cursor:", e.clientX, e.clientY);
+    //console.log("Enviando posición del cursor:", e.clientX, e.clientY);
 
     socket.emit("cursor:move", {
       x: e.clientX,
