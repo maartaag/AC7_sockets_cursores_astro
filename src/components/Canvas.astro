@@ -14,7 +14,7 @@ import UserList from "./UserList.astro";
 <script>
   import { io } from "socket.io-client";
 
-  const socket = io("http://localhost:3000");
+  const socket = io("https://ac7-sockets-cursores-api.onrender.com/");
   window.socket = socket;
   window.dispatchEvent(new Event("socket-ready"));
 
